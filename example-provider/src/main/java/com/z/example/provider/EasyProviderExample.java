@@ -1,5 +1,8 @@
 package com.z.example.provider;
 
+import com.z.rpc.server.HttpServer;
+import com.z.rpc.server.VertxHttpServer;
+
 /**
  * @Author: Citres
  * @Description:
@@ -12,6 +15,8 @@ package com.z.example.provider;
  */
 public class EasyProviderExample {
     public static void main(String[] args) {
-        // TODO 提供服务
+        // 启动 web 服务
+        HttpServer httpServer = new VertxHttpServer();
+        httpServer.doStart(8080);
     }
 }
