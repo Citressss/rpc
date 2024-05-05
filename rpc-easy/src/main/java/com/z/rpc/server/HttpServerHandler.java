@@ -58,7 +58,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
                 Method method = implClass.getMethod(rpcRequest.getMethodName(), rpcRequest.getParameterTypes());
                 Object result = method.invoke(implClass.newInstance(), rpcRequest.getArgs());
                 // 封装返回结果
-                rpcResponse.builder()
+                rpcResponse = rpcResponse.builder()
                         .data(result)
                         .dataType(method.getReturnType())
                         .message("ok")
