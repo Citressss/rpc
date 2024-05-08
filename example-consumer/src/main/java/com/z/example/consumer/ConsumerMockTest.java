@@ -8,7 +8,7 @@ import com.z.rpc.proxy.ServiceProxyFactory;
 /**
  * 简易服务消费者示例
  */
-public class ConsumerExample {
+public class ConsumerMockTest {
 
     public static void main(String[] args) {
         // 获取代理
