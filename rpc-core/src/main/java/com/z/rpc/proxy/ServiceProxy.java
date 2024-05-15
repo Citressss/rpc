@@ -1,16 +1,23 @@
 package com.z.rpc.proxy;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.z.rpc.RpcApplication;
+import com.z.rpc.config.RpcConfig;
+import com.z.rpc.constant.RpcConstant;
 import com.z.rpc.model.RpcRequest;
 import com.z.rpc.model.RpcResponse;
+import com.z.rpc.model.ServiceMetaInfo;
+import com.z.rpc.registry.Registry;
+import com.z.rpc.registry.RegistryFactory;
 import com.z.rpc.serializer.Serializer;
 import com.z.rpc.serializer.SerializerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 服务代理（JDK 动态代理）
@@ -29,6 +36,7 @@ public class ServiceProxy implements InvocationHandler {
 //        Serializer serializer = new JdkSerializer();
         final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
         // 构造请求
+        String serviceName = method.getDeclaringClass().getName();
         RpcRequest rpcRequest = RpcRequest.builder()
                 .serviceName(method.getDeclaringClass().getName())
                 .methodName(method.getName())
@@ -38,9 +46,20 @@ public class ServiceProxy implements InvocationHandler {
         try {
             // 序列化
             byte[] bodyBytes = serializer.serialize(rpcRequest);
-            // 发送请求
-            // TODO 此处地址为硬编码（需要使用注册中心和服务发现机制解决）
-            try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8080")
+
+            // 从注册中心获取服务提供者请求地址
+            RpcConfig rpcConfig = RpcApplication.getRpcConfig();
+            Registry registry = RegistryFactory.getInstance(rpcConfig.getRegistryConfig().getRegistry());
+            ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
+            serviceMetaInfo.setServiceName(serviceName);
+            serviceMetaInfo.setServiceVersion(RpcConstant.DEFAULT_SERVICE_VERSION);
+            List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceMetaInfo.getServiceKey());
+            if (CollUtil.isEmpty(serviceMetaInfoList)) {
+                throw new RuntimeException("暂无服务地址");
+            }
+            // TODO 暂时取第一个，后面负载均衡
+            ServiceMetaInfo selectServiceMetaInfo = serviceMetaInfoList.get(0);
+            try (HttpResponse httpResponse = HttpRequest.post(selectServiceMetaInfo.getServiceAddress())
                     .body(bodyBytes)
                     .execute()) {
                 byte[] result = httpResponse.bodyBytes();
@@ -51,7 +70,6 @@ public class ServiceProxy implements InvocationHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 }

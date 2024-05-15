@@ -1,10 +1,13 @@
 package com.z.rpc.model;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.Data;
 
 /**
  * 服务元信息（注册信息）
  */
+
+@Data
 public class ServiceMetaInfo {
 
 
