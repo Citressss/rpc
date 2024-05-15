@@ -4,12 +4,6 @@ import com.z.example.common.model.User;
 import com.z.example.common.service.UserService;
 import com.z.rpc.proxy.ServiceProxyFactory;
 
-/**
- * @Author: Citres
- * @Description:
- * @Date: 2024/5/5 17:22
- */
-
 @SuppressWarnings({"all"})
 /**
  * 简易服务消费者示例

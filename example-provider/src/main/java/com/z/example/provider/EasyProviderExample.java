@@ -6,11 +6,6 @@ import com.z.rpc.registry.LocalRegistry;
 import com.z.rpc.server.HttpServer;
 import com.z.rpc.server.VertxHttpServer;
 
-/**
- * @Author: Citres
- * @Description:
- * @Date: 2024/5/5 17:05
- */
 
 @SuppressWarnings({"all"})
 /**
@@ -20,7 +15,7 @@ public class EasyProviderExample {
     public static void main(String[] args) {
         RpcApplication.init();
         // 注册服务
-        LocalRegistry.register(UserService.class.getName(),UserServiceImpl.class);
+        LocalRegistry.register(UserService.class.getName(), UserServiceImpl.class);
 
         // 启动 web 服务
         HttpServer httpServer = new VertxHttpServer();

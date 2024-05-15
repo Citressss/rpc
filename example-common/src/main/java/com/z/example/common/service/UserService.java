@@ -2,11 +2,6 @@ package com.z.example.common.service;
 
 import com.z.example.common.model.User;
 
-/**
- * @Author: Citres
- * @Description:
- * @Date: 2024/4/23 21:08
- */
 
 @SuppressWarnings({"all"})
 /**

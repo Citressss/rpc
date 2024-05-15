@@ -3,11 +3,6 @@ package com.z.example.provider;
 import com.z.example.common.model.User;
 import com.z.example.common.service.UserService;
 
-/**
- * @Author: Citres
- * @Description:
- * @Date: 2024/5/5 17:04
- */
 
 @SuppressWarnings({"all"})
 /**
