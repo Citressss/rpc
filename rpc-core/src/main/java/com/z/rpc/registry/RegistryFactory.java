@@ -5,7 +5,6 @@ import com.z.rpc.spi.SpiLoader;
 
 /**
  * 注册中心工厂（用于获取注册中心对象）
-
  */
 public class RegistryFactory {
 
