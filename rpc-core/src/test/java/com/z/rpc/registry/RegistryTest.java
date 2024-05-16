@@ -17,8 +17,6 @@ import java.util.List;
 @SuppressWarnings({"all"})
 /**
  * 注册中心测试
- *
-
  */
 public class RegistryTest {
 
