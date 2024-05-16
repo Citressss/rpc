@@ -99,6 +99,15 @@ public class EtcdRegistry implements Registry {
     public void destroy() {
         System.out.println("当前节点下线");
         // 释放资源
+
+        // 遍历本节点所有的 key
+        for (String key : localRegisterNodeKeySet) {
+            try {
+                kvClient.delete(ByteSequence.from(key, StandardCharsets.UTF_8)).get();
+            } catch (Exception e) {
+                throw new RuntimeException(key + "节点下线失败");
+            }
+        }
         if (kvClient != null) kvClient.close();
         if (client != null) client.close();
     }
