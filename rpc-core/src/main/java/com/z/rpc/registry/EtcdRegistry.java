@@ -39,8 +39,12 @@ public class EtcdRegistry implements Registry {
 
     @Override
     public void init(RegistryConfig registryConfig) {
-        client = Client.builder().endpoints(registryConfig.getAddress()).connectTimeout(Duration.ofMillis(registryConfig.getTimeout())).build();
+        client = Client.builder()
+                .endpoints(registryConfig.getAddress())
+                .connectTimeout(Duration.ofMillis(registryConfig.getTimeout()))
+                .build();
         kvClient = client.getKVClient();
+        heartBeat();
     }
 
     @Override
@@ -56,7 +60,7 @@ public class EtcdRegistry implements Registry {
         ByteSequence key = ByteSequence.from(registerKey, StandardCharsets.UTF_8);
         ByteSequence value = ByteSequence.from(JSONUtil.toJsonStr(serviceMetaInfo), StandardCharsets.UTF_8);
 
-        // 将键值对与租约关联起来，并设置过期时间
+        // 将键值对 与 租约关联起来，并设置过期时间
         PutOption putOption = PutOption.builder().withLeaseId(leaseId).build();
         kvClient.put(key, value, putOption).get();
 
@@ -102,7 +106,7 @@ public class EtcdRegistry implements Registry {
     @Override
     public void heartBeat() {
         // 10 秒续签一次
-        CronUtil.schedule("/10 * * * * *", (Task) () -> {
+        CronUtil.schedule("*/10 * * * * *", (Task) () -> {
             // 遍历本节点所有的 key
             for (String key : localRegisterNodeKeySet) {
                 try {

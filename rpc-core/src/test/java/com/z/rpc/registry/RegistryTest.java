@@ -2,7 +2,6 @@ package com.z.rpc.registry;
 
 import com.z.rpc.config.RegistryConfig;
 import com.z.rpc.model.ServiceMetaInfo;
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,5 +71,13 @@ public class RegistryTest {
         String serviceKey = serviceMetaInfo.getServiceKey();
         List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceKey);
         Assert.assertNotNull(serviceMetaInfoList);
+    }
+
+    @Test
+    public void heartBeat() throws Exception {
+        // init 方法中已经执行心跳检测了
+        register();
+        // 阻塞 1 分钟
+        Thread.sleep(60 * 1000L);
     }
 }
