@@ -10,13 +10,13 @@ import java.util.concurrent.CompletableFuture;
 /**
  * 简易服务消费者示例
  */
-public class EasyConsumerExample {
+public class EasyConsumerExample2 {
     public static void main(String[] args) {
         // TODO 需要获取 UserService 的实现类对象
 //        UserService userService = new UserServiceProxy();
         UserService userService = ServiceProxyFactory.getProxy(UserService.class);
         User user = new User();
-        user.setName("zzh");
+        user.setName("aaa");
         // 调用
         User newUser = userService.getUser(user);
         CompletableFuture.runAsync(() -> {
