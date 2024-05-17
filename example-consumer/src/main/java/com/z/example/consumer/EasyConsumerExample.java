@@ -17,8 +17,8 @@ public class EasyConsumerExample {
         user.setName("zzh");
         // 调用
         User newUser = userService.getUser(user);
-        User testCacheuser1 = userService.getUser(user);
-        User testCacheuser2 = userService.getUser(user);
+//        User testCacheuser1 = userService.getUser(user);
+//        User testCacheuser2 = userService.getUser(user);
         if (newUser != null) {
             System.out.println(newUser.getName());
         } else {
