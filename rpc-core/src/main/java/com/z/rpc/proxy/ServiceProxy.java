@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import com.z.rpc.RpcApplication;
 import com.z.rpc.config.RpcConfig;
 import com.z.rpc.constant.RpcConstant;
+import com.z.rpc.fault.retry.RetryStrategy;
+import com.z.rpc.fault.retry.RetryStrategyFactory;
 import com.z.rpc.loadbalancer.LoadBalancer;
 import com.z.rpc.loadbalancer.LoadBalancerFactory;
 import com.z.rpc.model.RpcRequest;
@@ -56,7 +58,6 @@ public class ServiceProxy implements InvocationHandler {
             if (CollUtil.isEmpty(serviceMetaInfoList)) {
                 throw new RuntimeException("暂无服务地址");
             }
-//            ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
 
             // 负载均衡
             LoadBalancer loadBalancer = LoadBalancerFactory.getInstance(rpcConfig.getLoadBalancer());
@@ -66,8 +67,12 @@ public class ServiceProxy implements InvocationHandler {
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
             System.out.println(selectedServiceMetaInfo.toString());
 
-            // 发送 rpc 请求
-            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            // rpc 请求
+            // 使用重试机制
+            RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+            RpcResponse rpcResponse = retryStrategy.doRetry(() ->
+                    VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo)
+            );
             return rpcResponse.getData();
         } catch (Exception e) {
             e.printStackTrace();
