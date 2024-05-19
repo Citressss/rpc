@@ -70,6 +70,7 @@ public class ServiceProxy implements InvocationHandler {
             // rpc 请求
             // 使用重试机制
             RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+            System.out.println(retryStrategy.toString());
             RpcResponse rpcResponse = retryStrategy.doRetry(() ->
                     VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo)
             );
