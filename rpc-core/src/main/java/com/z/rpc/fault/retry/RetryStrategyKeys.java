@@ -15,4 +15,9 @@ public interface RetryStrategyKeys {
      */
     String FIXED_INTERVAL = "fixedInterval";
 
+    /**
+     * 指数退避算法
+     */
+    String EXPONENTIAL_BACKOFF = "exponentialBackoff";
+
 }
