@@ -36,5 +36,4 @@ public class FixedIntervalRetryStrategy implements RetryStrategy {
                 .build();
         return retryer.call(callable);
     }
-
 }

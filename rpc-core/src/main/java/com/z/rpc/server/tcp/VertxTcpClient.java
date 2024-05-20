@@ -75,11 +75,11 @@ public class VertxTcpClient {
                             }
                     );
                     socket.handler(bufferHandlerWrapper);
-
                 });
         RpcResponse rpcResponse = responseFuture.get();
         // 记得关闭连接
         netClient.close();
+//        throw new RuntimeException("容错机制测试");
         return rpcResponse;
     }
 }

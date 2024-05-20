@@ -18,6 +18,7 @@ import com.z.rpc.registry.RegistryFactory;
 import com.z.rpc.serializer.Serializer;
 import com.z.rpc.serializer.SerializerFactory;
 import com.z.rpc.server.tcp.VertxTcpClient;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -28,6 +29,7 @@ import java.util.Map;
 /**
  * 服务代理（JDK 动态代理）
  */
+@Slf4j
 public class ServiceProxy implements InvocationHandler {
 
     /**
@@ -67,19 +69,21 @@ public class ServiceProxy implements InvocationHandler {
             Map<String, Object> requestParams = new HashMap<>();
             requestParams.put("methodName", rpcRequest.getMethodName());
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
-            System.out.println(selectedServiceMetaInfo.toString());
+            log.info("调用服务 : " + selectedServiceMetaInfo.toString());
 
             // rpc 请求
             // 使用重试机制
             RpcResponse rpcResponse;
             try {
                 RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+                log.info("重试机制 : " + retryStrategy.toString());
                 rpcResponse = retryStrategy.doRetry(() ->
                         VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo)
                 );
             } catch (Exception e) {
                 // 容错机制
                 TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getInstance(rpcConfig.getTolerantStrategy());
+                log.info("容错机制 : " + tolerantStrategy.toString());
                 rpcResponse = tolerantStrategy.doTolerant(null, e);
             }
             return rpcResponse.getData();
