@@ -69,14 +69,14 @@ public class ServiceProxy implements InvocationHandler {
             Map<String, Object> requestParams = new HashMap<>();
             requestParams.put("methodName", rpcRequest.getMethodName());
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
-            log.info("调用服务 : " + selectedServiceMetaInfo.toString());
+//            log.info("调用服务 : " + selectedServiceMetaInfo.toString());
 
             // rpc 请求
             // 使用重试机制
             RpcResponse rpcResponse;
             try {
                 RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
-                log.info("重试机制 : " + retryStrategy.toString());
+//                log.info("重试机制 : " + retryStrategy.toString());
                 rpcResponse = retryStrategy.doRetry(() ->
                         VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo)
                 );
