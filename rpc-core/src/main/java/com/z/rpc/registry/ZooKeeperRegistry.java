@@ -56,7 +56,7 @@ public class ZooKeeperRegistry implements Registry {
         // 构建 client 实例
         client = CuratorFrameworkFactory
                 .builder()
-                .connectString(registryConfig.getAddress())
+                .connectString("http://" + registryConfig.getAddress() + ":" + registryConfig.getPort())
                 .retryPolicy(new ExponentialBackoffRetry(Math.toIntExact(registryConfig.getTimeout()), 3))
                 .build();
 

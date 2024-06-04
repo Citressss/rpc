@@ -2,7 +2,6 @@ package com.z.rpc.registry;
 
 /**
  * 注册中心键名常量
-
  */
 public interface RegistryKeys {
 
@@ -10,4 +9,5 @@ public interface RegistryKeys {
 
     String ZOOKEEPER = "zookeeper";
 
+    String REDIS = "redis";
 }
