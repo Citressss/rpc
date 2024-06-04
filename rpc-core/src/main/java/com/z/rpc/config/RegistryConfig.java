@@ -18,7 +18,12 @@ public class RegistryConfig {
     /**
      * 注册中心地址
      */
-    private String address = "http://150.158.116.206/:2379";
+    private String address = "150.158.116.206";
+
+    /**
+     * 注册中心端口号
+     */
+    private Integer port = 2379;
 
     /**
      * 用户名

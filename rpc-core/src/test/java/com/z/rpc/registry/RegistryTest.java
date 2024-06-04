@@ -1,10 +1,14 @@
 package com.z.rpc.registry;
 
 import com.z.rpc.config.RegistryConfig;
+import com.z.rpc.config.RpcConfig;
+import com.z.rpc.constant.RpcConstant;
 import com.z.rpc.model.ServiceMetaInfo;
+import com.z.rpc.utils.ConfigUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import redis.clients.jedis.Jedis;
 
 import java.util.List;
 
@@ -20,12 +24,17 @@ import java.util.List;
  */
 public class RegistryTest {
 
-    final Registry registry = new EtcdRegistry();
+//    final Registry registry = new EtcdRegistry();
+    final Registry registry = new RedisRegistry();
+
 
     @Before
     public void init() {
-        RegistryConfig registryConfig = new RegistryConfig();
-        registryConfig.setAddress("http://150.158.116.206:2379");
+//        RegistryConfig registryConfig = new RegistryConfig();
+//        registryConfig.setAddress("150.158.116.206");
+//        registryConfig.setPort(6379);
+//        registryConfig.setPassword("zzh-redis");
+        RegistryConfig registryConfig = ConfigUtils.loadConfig(RpcConfig.class, RpcConstant.DEFAULT_CONFIG_PREFIX).getRegistryConfig();
         registry.init(registryConfig);
     }
 
@@ -77,5 +86,12 @@ public class RegistryTest {
         register();
         // 阻塞 1 分钟
         Thread.sleep(60 * 1000L);
+    }
+
+    @Test
+    public void testJedis() {
+        Jedis jedis = new Jedis("150.158.116.206");
+        jedis.auth("zzh-redis");
+        System.out.println(jedis.get("test"));
     }
 }
